@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Ecommerce.Classes;
 using Ecommerce.Models;
 
 namespace Ecommerce.Controllers
@@ -39,20 +40,12 @@ namespace Ecommerce.Controllers
         // GET: Cities/Create
         public ActionResult Create()
         {
-            var departaments = db.Departaments.ToList();
-            departaments.Add(new Departaments
-            {
-                DepartamentsId = 0,
-                Name = "[ Select the departament ]"
-            });
-
-            departaments = departaments.OrderBy(d => d.Name).ToList();
-
+            var departaments = ComboHelper.GetDepartaments();
             ViewBag.DepartamentsId = new SelectList(departaments, "DepartamentsId", "Name");
             return View();
         }
 
-        // POST: Cities/Create
+        // POST: Cities/Create/
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -66,7 +59,9 @@ namespace Ecommerce.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DepartamentsId = new SelectList(db.Departaments, "DepartamentsId", "Name", cities.DepartamentsId);
+            var departaments = ComboHelper.GetDepartaments();
+            ViewBag.DepartamentsId = new SelectList(departaments, "DepartamentsId", "Name");
+            
             return View(cities);
         }
 
