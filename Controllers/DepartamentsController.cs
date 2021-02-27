@@ -12,12 +12,21 @@ namespace Ecommerce.Controllers
 {
     public class DepartamentsController : Controller
     {
-        private EcommerceContext db = new EcommerceContext();
+        private EcommerceContext database = new EcommerceContext();
 
         // GET: Departaments
         public ActionResult Index()
         {
-            return View(db.Departaments.ToList());
+            try
+            {
+                var departaments = database.Departaments.ToList();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return View(database.Departaments.ToList());
         }
 
         // GET: Departaments/Details/5
@@ -27,7 +36,7 @@ namespace Ecommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Departaments departaments = db.Departaments.Find(id);
+            Departaments departaments = database.Departaments.Find(id);
             if (departaments == null)
             {
                 return HttpNotFound();
@@ -50,9 +59,23 @@ namespace Ecommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Departaments.Add(departaments);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                database.Departaments.Add(departaments);
+                try
+                {
+                    database.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if(ex.InnerException != null && ex.InnerException.InnerException != null)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.InnerException.Message);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                    }
+                }
             }
 
             return View(departaments);
@@ -65,7 +88,7 @@ namespace Ecommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Departaments departaments = db.Departaments.Find(id);
+            Departaments departaments = database.Departaments.Find(id);
             if (departaments == null)
             {
                 return HttpNotFound();
@@ -82,8 +105,8 @@ namespace Ecommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(departaments).State = EntityState.Modified;
-                db.SaveChanges();
+                database.Entry(departaments).State = EntityState.Modified;
+                database.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(departaments);
@@ -96,7 +119,7 @@ namespace Ecommerce.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Departaments departaments = db.Departaments.Find(id);
+            Departaments departaments = database.Departaments.Find(id);
             if (departaments == null)
             {
                 return HttpNotFound();
@@ -109,11 +132,11 @@ namespace Ecommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Departaments departament = db.Departaments.Find(id);
-            db.Departaments.Remove(departament);
+            Departaments departament = database.Departaments.Find(id);
+            database.Departaments.Remove(departament);
             try
             {
-                db.SaveChanges();
+                database.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -135,7 +158,7 @@ namespace Ecommerce.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                database.Dispose();
             }
             base.Dispose(disposing);
         }
