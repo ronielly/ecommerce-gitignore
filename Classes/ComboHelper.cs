@@ -18,9 +18,7 @@ namespace Ecommerce.Classes
                 Name = "[ Select the departament ]"
             });
 
-            departaments = departaments.OrderBy(d => d.Name).ToList();
-
-            return departaments;
+            return departaments = departaments.OrderBy(d => d.Name).ToList();
         }
 
         public void Dispose()

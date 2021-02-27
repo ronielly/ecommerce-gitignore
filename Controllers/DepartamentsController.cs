@@ -109,10 +109,26 @@ namespace Ecommerce.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Departaments departaments = db.Departaments.Find(id);
-            db.Departaments.Remove(departaments);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            Departaments departament = db.Departaments.Find(id);
+            db.Departaments.Remove(departament);
+            try
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                if(ex.InnerException != null && ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("REFERENCE")){
+                    ModelState.AddModelError(string.Empty, "Não é possivel excluir departamentos porque existe cidades relacionadas a ele, primeiro remova a cidade, volte a excluir");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+
+                return View(departament);
+            }
         }
 
         protected override void Dispose(bool disposing)

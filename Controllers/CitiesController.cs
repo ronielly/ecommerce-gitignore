@@ -40,8 +40,7 @@ namespace Ecommerce.Controllers
         // GET: Cities/Create
         public ActionResult Create()
         {
-            var departaments = ComboHelper.GetDepartaments();
-            ViewBag.DepartamentsId = new SelectList(departaments, "DepartamentsId", "Name");
+            ViewBag.DepartamentsId = new SelectList(ComboHelper.GetDepartaments(), "DepartamentsId", "Name");
             return View();
         }
 
@@ -59,8 +58,7 @@ namespace Ecommerce.Controllers
                 return RedirectToAction("Index");
             }
 
-            var departaments = ComboHelper.GetDepartaments();
-            ViewBag.DepartamentsId = new SelectList(departaments, "DepartamentsId", "Name");
+            ViewBag.DepartamentsId = new SelectList(ComboHelper.GetDepartaments(), "DepartamentsId", "Name");
             
             return View(cities);
         }
@@ -77,7 +75,7 @@ namespace Ecommerce.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartamentsId = new SelectList(db.Departaments, "DepartamentsId", "Name", cities.DepartamentsId);
+            ViewBag.DepartamentsId = new SelectList(ComboHelper.GetDepartaments(), "DepartamentsId", "Name", cities.DepartamentsId);
             return View(cities);
         }
 
@@ -94,7 +92,7 @@ namespace Ecommerce.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartamentsId = new SelectList(db.Departaments, "DepartamentsId", "Name", cities.DepartamentsId);
+            ViewBag.DepartamentsId = new SelectList(ComboHelper.GetDepartaments(), "DepartamentsId", "Name", cities.DepartamentsId);
             return View(cities);
         }
 
