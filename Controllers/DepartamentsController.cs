@@ -69,11 +69,12 @@ namespace Ecommerce.Controllers
                 {
                     if(ex.InnerException != null && ex.InnerException.InnerException != null)
                     {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
                         ModelState.AddModelError(string.Empty, ex.InnerException.InnerException.Message);
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                        ModelState.AddModelError(string.Empty, ex.Message);
                     }
                 }
             }
@@ -106,8 +107,25 @@ namespace Ecommerce.Controllers
             if (ModelState.IsValid)
             {
                 database.Entry(departaments).State = EntityState.Modified;
-                database.SaveChanges();
-                return RedirectToAction("Index");
+
+                try
+                {
+                    database.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if(ex.InnerException != null 
+                        && ex.InnerException.InnerException != null)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                        ModelState.AddModelError(string.Empty, ex.InnerException.InnerException.Message);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", ex.Message);
+                    }
+                }
             }
             return View(departaments);
         }

@@ -21,6 +21,18 @@ namespace Ecommerce.Classes
             return departaments = departaments.OrderBy(d => d.Name).ToList();
         }
 
+        public static List<Cities> GetCities()
+        {
+            var cities = db.Cities.ToList();
+            cities.Add(new Cities
+            {
+                CitiesId = 0,
+                Name = "[ Select the cities]"
+            });
+
+            return cities = cities.OrderBy(c => c.Name).ToList();
+        }
+
         public void Dispose()
         {
             db.Dispose();

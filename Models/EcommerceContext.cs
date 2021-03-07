@@ -20,5 +20,7 @@ namespace Ecommerce.Models
         public System.Data.Entity.DbSet<Ecommerce.Models.Departaments> Departaments { get; set; }
 
         public System.Data.Entity.DbSet<Ecommerce.Models.Cities> Cities { get; set; }
+
+        public System.Data.Entity.DbSet<Ecommerce.Models.Companies> Companies { get; set; }
     }
 }
